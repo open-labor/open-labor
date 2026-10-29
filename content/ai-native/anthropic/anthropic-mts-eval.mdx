@@ -1,0 +1,219 @@
+---
+id: "anthropic-mts-eval"
+meta:
+  organization: "Anthropic"
+  level_or_role: "MTS / Research Engineer"
+  paradigm: "ai-native"
+  domain: "Research"
+  version_tag: "能力爬坡期范式（前沿模型快速迭代下的经验主义文化）"
+  tier_axis: 7
+  title: "Anthropic 研究工程师范式：Eval 驱动的全栈闭环"
+  summary: "以经验主义为底座：分歧转化为实验、黑盒试错建立信号、Agent 作为第一杠杆、安全约束与能力推进同权重进流程。"
+  tags: ["Eval-driven", "黑盒试错", "Agentic Workflow", "全栈闭环", "Empiricism"]
+  source:
+    type: "公开材料归纳"
+    note: "基于 Anthropic 公开研究实践、Eval 方法论分享与技术博客归纳，非亲历者投稿"
+mental_models:
+  underlying_assumptions:
+    - "模型能力是持续上涨的潮水：任何『现在模型做不到』的判断都有半衰期。建基础设施前先问『下一代模型会不会让这层脚手架作废』。"
+    - "经验主义优先于辩论：关于模型能力的分歧，答案不在会议室在 eval 里；先写 20 条评测用例再讨论。"
+    - "能力是涌现的、交互是分布式的：不要试图在脑内推演复杂 agent 系统的全部行为，构建-观测-迭代是唯一可靠的认知路径。"
+    - "Safety 是并行约束不是事后补丁：安全评测与能力评测同权重进 CI，『先跑通再补安全』在流程上不可行。"
+    - "全栈闭环是默认工作形态：研究员可以改 prompt、改训练代码、改 eval harness、改前端 demo；『这不是我的层』是反模式。"
+  primary_metrics:
+    - name: "任务通过率（内评套件）"
+      definition: "在锁定的内部 eval suite 上，模型/agent 解决任务的比例。"
+      anti_signal: "单一公开 benchmark 的刷分——过拟合评测点后指标失去外部效度。"
+    - name: "Time-to-first-eval"
+      definition: "从研究假设提出到拿到第一批可跑的评测信号的时长，目标小时级。"
+      anti_signal: "实验代码的工程质量——探索期代码整洁度与结论价值负相关。"
+    - name: "每任务成本"
+      definition: "agent 解决单个任务的 token 与算力成本，决定能否从 demo 走向产品。"
+      anti_signal: "单次调用的 token 数——短输出不等于低成本，重试次数才是大头。"
+    - name: "人工干预频率"
+      definition: "agent 工作流中需要人类接管决策的次数/任务，是自主性的直接度量。"
+      anti_signal: "自动化覆盖率——覆盖 90% 步骤但关键节点全靠人盯，等于没有自主性。"
+    - name: "不安全输出率"
+      definition: "red-team 套件上的违规输出率，与能力指标同权重进入发布决策。"
+      anti_signal: "无——这一项没有伪信号形式，缺失本身就是伪信号。"
+  boundary_awareness:
+    - "研究员的边界是『问题定义权』而非『代码领地』：可以且应该触碰从数据到 demo 的任何一层，但研究方向的取舍需要公开论证。"
+    - "『快速脏 demo』与『可交付系统』之间有显式开关：demo 不背工程质量债，但转产品必须过工程 review，两者不混淆。"
+    - "对 RSP / 使用政策类安全边界：不可协商、不可『先跑通再说』，触线即停是流程而非个人美德。"
+    - "对外的能力宣称以已发布 eval 为限：内部激动的外推（『再 scaling 一下就能』）不进对外文档。"
+scenarios:
+  - id: "s1-eval-leak"
+    category: "eval-disagreement"
+    scenario_title: "同事宣布新训练方案让 agent 在内部软件工程套件上通过率从 0.41 升至 0.62。你抽查发现其中 30% 任务与公开仓库 issue 高度相似，怀疑数据污染，对方认为『相似不等于泄漏』。模型下周一要参与对外发布决策。"
+    junior_approach: "在群里争论『我觉得有泄漏』vs『我觉得没有』，或私下告诉经理让上级裁决，让发布决策在缺乏证据的情况下进行。"
+    senior_approach: "24 小时内构建去污染干净集使分歧可测量。同时报告污染集与干净集两个数字，把二元争论转成连续测量。证据完备后带完整链条直接上升决策层，并同步对方。"
+    trade_offs: "选择 24 小时内建干净集并重跑，而非等待多周审计流程——代价是干净集覆盖可能不全，结论必须标注置信边界。"
+    senior_steps:
+      - move: "24 小时内构建去污染 eval：按发布决策所需的能力维度重新生成任务（私有代码库、新写需求、防泄漏 canary 字符串），使争议集与干净集可对比。"
+        rationale: "分歧的解决方案不是说服对方，而是构造一个让分歧变得可测量的实验。"
+      - move: "在干净集上重跑，同时报告两个数字：污染集通过率、干净集通过率及差值，把『能力是否真实』转化为『真实幅度是多少』。"
+        rationale: "把二元争论转换成连续测量后，双方从对手变成共同解释数据的人。"
+      - move: "若干净集显著更低（如 0.62→0.49），产出 1 页 memo：泄漏假设、证据链、干净集结果、对发布决策的建议，直接发给决策者并同步对方。"
+        rationale: "证据完备后快速上升决策层不是越级，是对组织时间的尊重；同步对方避免背后袭击感。"
+    trade_off_details:
+      - choose: "24 小时内建干净集并重跑"
+        over: "等待更严格的多周审计流程"
+        cost: "干净集构造时间紧可能覆盖不全污染面，结论必须标注置信边界"
+      - choose: "带着完整证据链直接上升决策层"
+        over: "与同事私下继续拉锯"
+        cost: "若结果最终支持对方，自己消耗了组织对『狼来了』的耐心，需接受结果检验"
+  - id: "s2-steering-explore"
+    category: "uncertainty-exploration"
+    scenario_title: "你提出一个无先例的方向（如通过激活工程改变模型 refuse 行为的粒度），只有模糊直觉、没有文献支持，两周 sprint 预算，团队期望你给出『值得/不值得继续』的信号。"
+    junior_approach: "花第一周读完所有相关文献再动手（两周已过去 60%）；或者直接构造庞大实验矩阵，两周结束时一个矩阵都没跑完。"
+    senior_approach: "Day 1 定义『最小信息增量』并设计 1 天可出结果的实验。固定小评测集批量扫 10-20 个干预组合，先看分布再看机制。Day 10 硬截止产出 go/no-go memo，把无信号本身作为可交付结论。"
+    trade_offs: "选择小评测集大范围扫参，而非大评测集精调单点——代价是噪声大，结论只能到『信号存在性』粒度，不足以直接指导机制研究。"
+    senior_steps:
+      - move: "Day 1 先写『最小信息增量』定义：什么实验结果最会让你改变判断？先设计能在 1 天内产生该结果的实验。"
+        rationale: "探索期最稀缺的资源是判断更新的速度，不是实验的覆盖度。"
+      - move: "黑盒试错：固定评测集（20-50 条针对性用例），批量扫 10-20 个干预变量组合，先看分布再看机制，不预设假设逐个解释。"
+        rationale: "小样本扫参先回答『信号是否存在』；黑盒扫出的意外模式常比预设假设更有价值。"
+      - move: "Day 10 停止实验，产出『继续/转向/放弃』memo：把无信号本身作为可交付结论（含置信区间与已排除假设），而非视为失败。"
+        rationale: "排除一个方向与找到信号具有同等决策价值；组织需要的是校准过的地图，不是永远乐观的故事。"
+    trade_off_details:
+      - choose: "小评测集大范围扫参"
+        over: "大评测集精调单点"
+        cost: "小集噪声大，结论只能到『信号存在性』粒度，不足以直接指导机制研究"
+      - choose: "两周硬截止产出 go/no-go"
+        over: "无限期探索到『有感觉』为止"
+        cost: "截止可能砍掉慢热方向；用明确的复活条件（新证据出现即重启）部分对冲"
+  - id: "s3-internal-customer"
+    category: "ambiguous-requirements"
+    scenario_title: "内部团队（如微调团队）提需求：『让模型在我们的场景里更好用』。没有指标、没有样例、没有『更好用』的定义，而你手上还有两个研究 sprint 并行。"
+    junior_approach: "按字面意思『优化 prompt』发一版交差；或者因为需求模糊直接排到队列末尾，几个月后对方自己解决了，协作信用归零。"
+    senior_approach: "30 分钟对齐会强制收敛失败案例、现有工作流与不可接受边界三件事。把失败案例转成 eval 用例让 eval 本身成为需求契约。首周交付最粗暴可行解附 eval 分数，用增长曲线决定是否值得训练级投入。"
+    trade_offs: "选择首周交 hacky 粗解 + eval 分数，而非排期做系统性方案——代价是粗解可能被误当最终方案存活过久，必须显式标注『探测性解，勿依赖』。"
+    senior_steps:
+      - move: "一次 30 分钟对齐会强制收敛三件事：3 个真实失败案例、对方现在的工作流（如何使用模型）、不可接受的边界（什么改坏了算事故）。"
+        rationale: "客户说不清需求时，失败案例比成功想象的信息量大一个数量级。"
+      - move: "把失败案例转成 20-30 条 eval 用例，让客户确认『这些对了就算更好用』——eval 本身成为需求文档。"
+        rationale: "eval 先行把模糊形容词变成可回归的契约，同时是后续所有迭代的回归测试。"
+      - move: "首周交付最粗暴的可行解（哪怕只是 prompt + 检索脚本的 hacky 组合），附 eval 分数；用分数增长曲线与客户共同决定是否值得训练级投入。"
+        rationale: "粗解 + 测量能区分『eval 定义错了』和『解法不够好』，避免在错误的问题上深度投入。"
+    trade_off_details:
+      - choose: "首周交 hacky 粗解 + eval 分数"
+        over: "排期做系统性方案（微调/新 pipeline）"
+        cost: "粗解可能在组织内被误当作最终方案存活过久，必须显式标注『探测性解，勿依赖』"
+      - choose: "用 eval 用例作为需求契约"
+        over: "等待客户写出完整 PRD"
+        cost: "eval 只覆盖已知失败模式，未知失败要靠后续真实流量反馈补充"
+  - id: "s4-agent-leverage"
+    category: "cross-team-conflict"
+    scenario_title: "你的实验 pipeline 每天需人工触发 8 次：启动 sweep、检查 loss 异常、重启挂掉的 run、汇总结果到表格。队友认为『手动更可控』。你估计自动化可释放每周 15 小时，但 agent 脚本误判一次异常可能浪费数小时算力。"
+    junior_approach: "两个极端：继续手动（可控性执念），或一次性全自动托管（把判断力外包给脚本，出错时无人发现）。"
+    senior_approach: "按动作可逆性切分自动化边界：可逆动作全自动、不可逆动作保留人工确认。用连续越界触发与全量留痕把『可控性』异议变成可审计事实。释放的时间显式回收进研究循环并在 review 展示吞吐收益。"
+    trade_offs: "选择半自动（可逆全自动 + 不可逆人工确认），而非全托管或全手动。代价是人工确认仍是吞吐瓶颈，触发规则本身需要维护且会过时。"
+    senior_steps:
+      - move: "按可逆性拆分任务：可逆动作（重启 run、汇总表格、跑新配置）交给 agent 全自动。不可逆或高成本动作（清理 checkpoint、终止他人的 run、对外发布数字）保留人工确认。"
+        rationale: "自动化的安全边界由动作可逆性决定，不由任务复杂度决定。"
+      - move: "为 agent 配置置信带：异常检测只在连续 2 个 checkpoint 越界时触发动作。所有自动动作在共享频道留完整日志，让队友的可控性顾虑变成可审计事实。"
+        rationale: "对『可控性』异议的回应不是辩论，而是让系统行为可观测、可追溯。"
+      - move: "释放的 15 小时显式回收进研究循环（多跑 2 组 sweep），在 sprint review 展示『自动化换来的实验吞吐』。"
+        rationale: "杠杆的价值必须以研究产出度量并可见，否则自动化会被视为工程师的玩具。"
+    trade_off_details:
+      - choose: "半自动（可逆全自动 + 不可逆人工确认）"
+        over: "全托管或全手动"
+        cost: "保留的人工确认仍是吞吐瓶颈；触发规则本身需要维护且会过时"
+      - choose: "自动动作全量留痕到共享频道"
+        over: "私有日志"
+        cost: "频道噪声增加，需要摘要机制，否则团队会开始忽略日志"
+workflow_and_toolchains:
+  collaboration_interfaces:
+    - "异步文档优先：研究决策（方向取舍、go/no-go）必须有 memo 落地；同步会议用于辩论与演示，不用于信息同步。"
+    - "Spicy opinion, loosely held：评审文化鼓励强观点 + 快速更新；被数据打脸的速度是荣誉不是污点。"
+    - "Demo 驱动的 review：研究进展展示以可交互 demo + eval 曲线为主，PPT 叙事为辅。"
+    - "小步 PR + 临时实验分支：实验代码不追求完美，但结论必须能从 repo 与实验追踪系统复现。"
+  agent_and_automation_leverage:
+    - "Claude Code 等 coding agent 是第一杠杆：批量跑 sweep、代码迁移、eval 用例生成、跨 repo 改造由 agent 并行执行，人保留假设设计与结果解读。"
+    - "自建 eval harness 是基础设施：每个研究方向开工前先有可跑的 eval，没有 eval 的假设不允许占用讨论时间。"
+    - "实验追踪自动化：所有 sweep 的配置、指标、产物自动入库，任何结论可一键复现。"
+  delivery_loop:
+    trigger: "每个研究假设（而非日历周期）"
+    loop: ["假设写成可证伪命题", "构造或复用最小 eval", "跑基线与干预组", "更新判断（含置信度）进 memo", "决定：放大/迭代/放弃，进入下一假设"]
+    cadence: "单假设 1-3 天，sprint（2 周）做阶段 review"
+    evidence: "假设 memo 链（含每次判断更新）；可复现的 eval 结果与实验配置"
+anti_patterns:
+  - name: "Eval 刷分（Goodhart 陷阱）"
+    manifestation: "优化动作越来越针对 eval 的 quirks（格式偏好、触发词），而非真实能力；内部分数上涨，真实任务无感。"
+    why_it_fails: "eval 是能力的采样不是能力本身；过拟合采样点后指标失去外部效度，并污染后续所有以此选型的决策。"
+    correction: "锁定 held-out 私有集定期轮换；任何涨分必须附 2 个非优化目标的独立套件佐证。"
+  - name: "过早工程化"
+    manifestation: "研究方向尚未验证，先花三周搭『生产级』pipeline：类型完备、测试齐全、可扩展架构。"
+    why_it_fails: "研究假设的死亡率超过 80%，为死方向建设的工程质量是纯损耗；完备工程还会拖慢假设迭代节奏，而真正稀缺的是判断更新速度。"
+    correction: "工程投入与假设存活轮数挂钩：第 1 轮允许 notebook + 脚本，连续 2 轮有信号后才允许工程化。"
+  - name: "Prompt 拜物教"
+    manifestation: "花数小时手调一个 prompt 的措辞与咒语，而不把失败模式沉淀成数据集或评测。"
+    why_it_fails: "手调结果不可迁移（模型一升级即作废）、不可回归（无评测锁定）、不可协作（知识留在个人脑内）。"
+    correction: "每解决一个失败模式，强制沉淀 1 条 eval 用例；prompt 调优时间超过建数据集时间即亮红灯。"
+  - name: "会议驱动研究"
+    manifestation: "用不断升级的同步会议对齐『模型能力边界』，会议结论依赖在座者谁的嗓门大。"
+    why_it_fails: "能力边界只能被实验揭示，会议只能在已有证据间加权；高频会议以组织时间伪装成进展。"
+    correction: "能力分歧一律转化为两周内可跑的判别实验；会议只允许讨论已产生的数据。"
+self_assessment_checks:
+  - id: "sa-decision-2"
+    dimension: "decision"
+    weight: 0.25
+    question: "你连续三周的实验都没有正向信号，而这个方向是你自己提议的。"
+    behavioral_anchor: "写下已排除的假设与置信度，产出 go/no-go memo 供团队检验，接受被推翻。"
+    anchors:
+      - { score: 1, behavior: "继续加大实验量，相信量变引起质变。" }
+      - { score: 2, behavior: "悄悄换方向，避免留下失败记录。" }
+      - { score: 3, behavior: "写下已排除的假设与置信度，产出 go/no-go memo 供团队检验，接受被推翻。" }
+      - { score: 4, behavior: "检查评测集本身是否测不到该方向的信号（区分测量工具失效与方向失效）。" }
+      - { score: 5, behavior: "把负结果 memo 沉淀为团队资产，帮助他人避开同一路径。" }
+  - id: "sa-boundary-2"
+    dimension: "boundary"
+    weight: 0.2
+    question: "你发现另一个团队的研究 demo 存在安全评测盲区，可能违反使用政策，而他们进度压力很大。"
+    behavioral_anchor: "书面（频道/memo）指出具体盲区与依据，同步双方经理，把决策权交给流程而非人情。"
+    anchors:
+      - { score: 1, behavior: "不关我事，等安全团队发现。" }
+      - { score: 2, behavior: "私下提醒同事，不落书面。" }
+      - { score: 3, behavior: "书面（频道/memo）指出具体盲区与依据，同步双方经理，把决策权交给流程而非人情。" }
+      - { score: 4, behavior: "提供可直接使用的补充评测用例，降低对方补齐的成本。" }
+      - { score: 5, behavior: "推动该类盲区检查进入统一的安全评测门禁，使同类问题不再依赖个人发现。" }
+  - id: "sa-leverage-2"
+    dimension: "leverage"
+    weight: 0.2
+    question: "你要在 200 个配置组合中找出效果最好的训练/干预方案，deadline 一周。"
+    behavioral_anchor: "用 agent/脚本并行跑全量组合，人只设计汇总与排序规则。"
+    anchors:
+      - { score: 1, behavior: "凭经验挑 10 个最有希望的逐个试。" }
+      - { score: 2, behavior: "全部自己顺序跑，跑不完就申请延期。" }
+      - { score: 3, behavior: "用 agent/脚本并行跑全量组合，人只设计汇总与排序规则。" }
+      - { score: 4, behavior: "加入早停与资源再分配策略（无信号组合提前终止），把算力集中到有信号区域。" }
+      - { score: 5, behavior: "把 sweep 编排抽象成团队可复用工具，下一次他人零成本使用。" }
+  - id: "sa-loop-2"
+    dimension: "loop"
+    weight: 0.2
+    question: "你的方向取得了『看起来不错』的结果，团队询问是否可以对外展示。"
+    behavioral_anchor: "展示完整曲线（含失败 run）与当前置信度，明确标注哪些是预注册假设、哪些是事后发现。"
+    anchors:
+      - { score: 1, behavior: "截图最好看的曲线直接展示。" }
+      - { score: 2, behavior: "等再跑两周更完美再展示。" }
+      - { score: 3, behavior: "展示完整曲线（含失败 run）与当前置信度，明确标注哪些是预注册假设、哪些是事后发现。" }
+      - { score: 4, behavior: "附独立 eval 的交叉验证与已知限制清单。" }
+      - { score: 5, behavior: "把『展示即附限制清单』变成团队默认格式，提升整个组织的证据标准。" }
+  - id: "sa-antipattern-2"
+    dimension: "antipattern"
+    weight: 0.15
+    question: "模型升级后，你过去两个月调优的 prompt 效果全变，同事建议再调一轮。"
+    behavioral_anchor: "把这次退步转为 eval 用例集，区分『真退步』与『措辞敏感』，再决定是否值得调。"
+    anchors:
+      - { score: 1, behavior: "再花两天调回来。" }
+      - { score: 2, behavior: "抱怨模型不稳定，停止相关工作。" }
+      - { score: 3, behavior: "把这次退步转为 eval 用例集，区分『真退步』与『措辞敏感』，再决定是否值得调。" }
+      - { score: 4, behavior: "评估该场景是否应改用结构化方案（微调/工具增强）替代脆弱的 prompt 依赖。" }
+      - { score: 5, behavior: "在团队内建立『prompt 依赖度审计』：关键路径上的 prompt 都有 eval 锁定与降级方案。" }
+---
+
+## 专家按语
+
+这一范式的底层是经验主义（Empiricism）。它把观点分歧系统性地转化为可测量实验。这是整台机器最核心的传动装置。个人的价值不来自职称与汇报层级。而来自判断更新的速度与实验闭环的密度。
+
+与层级范式的关键分野在杠杆的性质。这里的杠杆是模型与 Agent 本身：coding agent 并行跑 sweep，eval harness 锁定回归，实验追踪保证复现。个体的全栈闭环（从假设到 demo）替代了组织的流水线分工。安全约束以流程门禁的形式与能力推进同权重并行。

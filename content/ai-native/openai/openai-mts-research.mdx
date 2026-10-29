@@ -1,0 +1,183 @@
+---
+id: "openai-mts-research"
+meta:
+  organization: "OpenAI"
+  level_or_role: "Member of Technical Staff"
+  paradigm: "ai-native"
+  domain: "Research"
+  version_tag: "能力爬坡期范式（能力-安全-产品三线并进）"
+  tier_axis: 7
+  title: "OpenAI MTS 范式：部署即研究与规模化赌注"
+  summary: "用小规模 scaling 外推做算力赌注、把真实部署当作最大的实验场、以 preparedness 门禁为能力与安全同称重——通用智能路线下的研究工程纪律。"
+  tags: ["Scaling Laws", "Preparedness", "Red Teaming", "Deployment-driven", "Demo-driven"]
+  source:
+    type: "公开材料归纳"
+    note: "基于 OpenAI 公开技术报告、system card、研究实践分享归纳，非亲历者投稿"
+mental_models:
+  underlying_assumptions:
+    - "Scaling 是被验证过的基础事实：能力大致可由算力/数据/参数外推，重大路线赌注用小规模 scaling 实验做代理决策，而不是全量豪赌。"
+    - "部署即研究：真实用户的大规模使用本身是最大的实验场；产品发布不是研究的终点，而是数据回路的起点。"
+    - "能力与安全同称重：前沿模型发布前必须通过 preparedness 评估与红队，风险等级决定发布门槛，这是流程不是态度。"
+    - "通用性优先：面向通用智能的工作偏向可泛化的方法；特殊场景的技巧只有在能兑换成通用认知时才值得做。"
+    - "一切皆可 demo：不确定的想法先用一个下午做出可交互原型，demo 的说服力与证伪力都超过文档。"
+  primary_metrics:
+    - name: "内部能力基准分位（含 held-out）"
+      definition: "锁定且定期轮换的内部基准上的分位变化，是能力进步的主读数。"
+      anti_signal: "单一公开 benchmark 分数——早已被训练分布覆盖，涨分不再有意义。"
+    - name: "Preparedness 风险等级"
+      definition: "网络安全/生物/说服力等维度的风险评分，直接决定模型发布门槛。"
+      anti_signal: "红队通过数——某领域零发现可能只是没人认真攻过。"
+    - name: "部署后真实使用信号"
+      definition: "发布后用户真实使用分布、新失败模式被回收进评测与训练管道的速度。"
+      anti_signal: "社交媒体声量——声量代表话题性，不代表使用价值。"
+    - name: "Scaling 代理外推误差"
+      definition: "小规模外推与大模型实际结果的偏差，校准下一次算力赌注的核心参数。"
+      anti_signal: "单次外推成功——一次命中可能是运气，误差分布才是能力。"
+  boundary_awareness:
+    - "MTS 的边界是端到端的研究-产品回路：模型、评测、推理优化、产品原型都是合法工作面；方向级取舍需要公开论证。"
+    - "安全边界（preparedness 门禁、使用政策）不可协商：风险等级未定之前，功能可以不上，流程不能绕过。"
+    - "对外沟通以 system card 与已发布评估为限：内部未定论的能力外推不进对外材料。"
+    - "与产品团队的接口是能力边界清单：哪些能力可承诺、哪些是概率性、降级路径是什么，全部显式化。"
+scenarios:
+  - id: "s1-scaling-bet"
+    category: "uncertainty-exploration"
+    scenario_title: "下一代模型的关键路线分歧：路线 A（现有范式继续 scale）与路线 B（数据策略大改），全量训练一次耗尽季度算力预算，管理层要求年内看到明确结果，两条路线都有强力支持者。"
+    junior_approach: "凭个人 taste 选一条全力投入；或者政治性地两条各分一半算力，两条都跑到无法下结论的规模，钱花了问题还在。"
+    senior_approach: "用小规模算力梯度跑两条路线的 scaling 曲线并外推大算力下的交点与上限。判据与口径在投入前书面锁定。设中期检查点保留改判权。把本轮外推误差作为正式产出记录，校准下一轮赌注。"
+    trade_offs: "选择代理外推决策，而非直接全量豪赌——代价是外推可能存在相变误差，需要预设中止条件而非押注到底。"
+    senior_steps:
+      - move: "小算力梯度实验：两条路线各跑 3-4 个规模点，拟合 scaling 曲线，外推目标算力下的表现与交点。"
+        rationale: "scaling 的外推性正是它的杠杆：花百分之一的算力回答十分之九的方向问题。"
+      - move: "判据前置：外推口径、决策阈值、改判条件在实验开始前书面锁定并公开，杜绝事后解释。"
+        rationale: "路线之争最容易输给事后叙事；判据前置让结果自己说话。"
+      - move: "中期检查点：跑到一半时用真实数据校验外推偏差，偏差超阈值即触发改判程序。"
+        rationale: "外推是假设不是誓言；保留改判权是赌注管理的核心。"
+    trade_off_details:
+      - choose: "代理外推 + 判据前置"
+        over: "全量豪赌或算力对半分"
+        cost: "外推可能漏掉相变效应；用预设中止条件对冲，错过的机会成本计入下一轮预算"
+  - id: "s2-jailbreak-gate"
+    category: "eval-disagreement"
+    scenario_title: "新模型在内部能力评测全面优于上代，预发布红队却发现它在特定说服场景的越狱成功率上升 3 倍。产品团队按旧节奏准备发布，市场窗口就在两周内。"
+    junior_approach: "在发布材料里写『已通过安全评测』回避具体数字；或者私下压下红队报告，等发布后再修。"
+    senior_approach: "按 preparedness 流程对该维度定级（评分依据流程而非辩论），风险等级对应的发布门槛自动生效。越狱样本转成回归评测并入发布门禁。system card 如实披露已知弱点与缓解措施。产品节奏为安全流程让路。"
+    trade_offs: "选择发布延期换门禁完整执行——代价是错过营销窗口与竞品节奏，换的是安全流程的公信力。"
+    senior_steps:
+      - move: "触发 preparedness 定级流程：把越狱成功率上升交给评分体系，等级对应发布门槛自动生效，不进入个人辩论。"
+        rationale: "安全决策的公信力来自流程与分数，来自谁嗓门大的定级会一次性烧掉全部制度信用。"
+      - move: "越狱样本 48 小时内转成回归评测并入发布门禁，修复验证有客观判据。"
+        rationale: "把攻击样本资产化：这次是发布阻断项，下次就是回归防线。"
+      - move: "system card 如实披露：已知弱点、缓解措施、残余风险，让外部监督成为防线的一部分。"
+        rationale: "隐瞒一旦被外部发现，损失的是全部安全声明的可信度；披露本身也是能力。"
+    trade_off_details:
+      - choose: "延期发布，门禁完整执行"
+        over: "按营销窗口带伤发布"
+        cost: "错过窗口与竞品节奏；换的是流程公信力与降低的事故尾部风险"
+  - id: "s3-useful-demo"
+    category: "ambiguous-requirements"
+    scenario_title: "公司决定为 ChatGPT 做下一个大版本功能，目标只有一句『让模型对普通人更有用』：没有定义什么是有用、没有目标场景、没有验收标准，而你的时间预算是两个月。"
+    junior_approach: "等产品经理写出完整 PRD 再动；或者闭门憋一个大招，两个月后拿一个没人要的功能参加评审。"
+    senior_approach: "两周内做 3 个粗 demo，各自押注一种『有用』假设（主动式助手/长任务执行/深度工具整合）。内部 dogfood 收集真实使用数据淘汰两个。活下来的方向直接上小流量灰度做部署实验，把『什么是有用』变成可测量的分布而非会议室共识。"
+    trade_offs: "选择小流量灰度直接见真用户，而非打磨到完美再发布——代价是公关风险与支持成本，需要控制灰度面并预埋回滚。"
+    senior_steps:
+      - move: "三假设三 demo：每个 demo 两天，押注一种『有用』的定义，禁打磨，只验证核心交互是否成立。"
+        rationale: "demo 是假设的粉碎机；『有用』的分歧只能被使用行为裁决，不能被会议裁决。"
+      - move: "内部 dogfood 收集真实使用数据：使用频次、任务完成率、弃用点，淘汰两个方向。"
+        rationale: "内部用户是最便宜的真实分布近似；数据淘汰比评审淘汰客观一个量级。"
+      - move: "存活方向上小流量灰度（部署实验）：预埋成功指标与回滚开关，让真实流量回答剩余问题。"
+        rationale: "部署即研究：灰度不是发布动作，是最后一轮也是最大规模的实验。"
+    trade_off_details:
+      - choose: "小流量灰度直接见真用户"
+        over: "内部打磨到完美再全量"
+        cost: "公关风险与支持成本；用可控灰度面与回滚预案对冲"
+workflow_and_toolchains:
+  collaboration_interfaces:
+    - "研究 memo 文化：方向取舍、实验结论、go/no-go 全部 memo 化；同步会议用于辩论与 demo，不用于信息同步。"
+    - "system card 纪律：对外能力表述以已发布评估为限，内部外推不外溢。"
+    - "安全-研究接口：红队与 preparedness 评估直接进发布流程，风险等级是发布决策的输入而非参考。"
+    - "能力边界清单：研究团队向产品交付的能力都附带边界与降级路径说明。"
+  agent_and_automation_leverage:
+    - "自动化评测管线：能力基准、红队套件、回归评测统一进 CI，模型迭代自动出分。"
+    - "小规模实验编排：scaling 曲线实验的算力梯度、拟合与外推全流程脚本化。"
+    - "灰度实验脚手架：小流量部署实验的指标、回滚、数据回收标准化，一次搭建反复使用。"
+  delivery_loop:
+    trigger: "每个研究假设或每次模型迭代（而非日历周期）"
+    loop: ["假设写成可判据化命题", "小规模代理实验", "外推与判据对照", "部署实验/门禁验证", "结论 memo 化并更新校准表"]
+    cadence: "单假设数天，重大节点 review"
+    evidence: "研究 memo 链（含判据与置信度）；preparedness 评分记录；部署实验数据"
+anti_patterns:
+  - name: "Demo 唯美主义"
+    manifestation: "反复打磨对外演示的黄金路径，真实分布上的成功率与 demo 相差悬殊，团队按演示分布做产品决策。"
+    why_it_fails: "部署即研究的前提是真实数据；演示特化会让整个组织按一个不存在的分布迭代，直到真实用户替你纠错。"
+    correction: "内部演示必须使用真实使用数据的随机抽样，失败 case 一并展示，禁止挑选。"
+  - name: "红队形式化"
+    manifestation: "红队沦为过 checklist 的仪式：报告无人细读、等级评定先定后评、越狱样本不进回归。"
+    why_it_fails: "安全流程的公信力一旦破产，所有安全声明同时失效；形式化的红队比没有红队更危险，因为它制造安全感。"
+    correction: "红队报告强制附可复现样例与定级依据，等级评定在报告完成后进行，样本强制资产化。"
+  - name: "Scaling 唯上"
+    manifestation: "一切分歧用『再多堆点算力就能解决』终结，数据质量、对齐、产品形态等正交维度的创新被系统性饿死。"
+    why_it_fails: "scaling 不覆盖所有维度，且它本身是假设而非信仰；把方法论当信仰的团队会在假设失效处毫无准备。"
+    correction: "引用 scaling 论证必须附外推口径与误差区间；正交维度创新保留最低预算线。"
+self_assessment_checks:
+  - id: "sa-decision-oai"
+    dimension: "decision"
+    weight: 0.25
+    question: "两条路线的代理外推数据在决策阈值附近不分胜负，而决策截止日到了。"
+    behavioral_anchor: "按事前锁定判据执行并公开记录判据与置信度，设中期改判点；不为结果好看而事后改写判据。"
+    anchors:
+      - { score: 1, behavior: "凭个人 taste 拍板，赢了是眼光输了是运气。" }
+      - { score: 2, behavior: "申请无限延期，把决策推给上级。" }
+      - { score: 3, behavior: "按事前判据执行并公开记录，设中期改判点。" }
+      - { score: 4, behavior: "插入一个低成本判别实验缩小中期改判的不确定性。" }
+      - { score: 5, behavior: "把本轮外推误差写入团队的 scaling 外推校准表，下一轮算力赌注按该表修正外推口径。" }
+  - id: "sa-boundary-oai"
+    dimension: "boundary"
+    weight: 0.2
+    question: "你的新能力 demo 被产品团队想直接写进对外发布材料，而该能力尚未通过 preparedness 评估。"
+    behavioral_anchor: "书面阻止并说明流程依据，同时提供替代话术（引用已评估能力），推动该能力加急评估而不是绕过流程。"
+    anchors:
+      - { score: 1, behavior: "默许，先发了再说。" }
+      - { score: 2, behavior: "私下提醒同事，不留书面。" }
+      - { score: 3, behavior: "书面阻止并说明流程依据，提供替代话术，推动加急评估。" }
+      - { score: 4, behavior: "评估排期与发布节奏对齐，避免加急成为常态。" }
+      - { score: 5, behavior: "对外材料能力清单与评估状态系统联动，同类问题流程化拦截。" }
+  - id: "sa-leverage-oai"
+    dimension: "leverage"
+    weight: 0.2
+    question: "你需要验证一个想法在真实用户中的价值，但拿不到全量发布权限。"
+    behavioral_anchor: "用小流量灰度做部署实验：预埋成功指标与回滚开关，用最小发布面回答最大的问题，而不是等待或放弃。"
+    anchors:
+      - { score: 1, behavior: "放弃，等下次大版本。" }
+      - { score: 2, behavior: "只发内部问卷，用意见代替行为。" }
+      - { score: 3, behavior: "小流量灰度 + 明确成功指标 + 回滚预案。" }
+      - { score: 4, behavior: "灰度数据自动回流评测与训练管道。" }
+      - { score: 5, behavior: "把灰度部署实验的指标、回滚、数据回收封装成标准脚手架，全公司接入时一键使用，附使用文档。" }
+  - id: "sa-loop-oai"
+    dimension: "loop"
+    weight: 0.2
+    question: "你的项目要在内部评审呈现一次不理想的结果。"
+    behavioral_anchor: "完整呈现假设-结果-偏差（含 scaling 外推误差），更新组织校准表，把失败模式转成红队/回归用例。"
+    anchors:
+      - { score: 1, behavior: "只写成功指标，失败一笔带过。" }
+      - { score: 2, behavior: "淡化问题，强调方向正确。" }
+      - { score: 3, behavior: "完整呈现假设-结果-偏差，更新校准表。" }
+      - { score: 4, behavior: "失败模式转成回归/红队用例，资产化。" }
+      - { score: 5, behavior: "把『假设-结果-偏差』的呈现格式定为团队评审的默认模板，缺该结构的结论在评审环节退回补全。" }
+  - id: "sa-antipattern-oai"
+    dimension: "antipattern"
+    weight: 0.15
+    question: "团队打算为一个重要客户演示准备一条特化的隐藏后处理管道。"
+    behavioral_anchor: "指出演示特化违反真实分布原则，提供真实抽样演示方案；若客户需求真实存在，转成正式功能候选走评估。"
+    anchors:
+      - { score: 1, behavior: "做，反正是演示。" }
+      - { score: 2, behavior: "直接拒绝，不给替代方案。" }
+      - { score: 3, behavior: "指出问题并提供真实抽样演示方案，需求转正式功能候选。" }
+      - { score: 4, behavior: "把该候选纳入正式评估排期并跟踪结果。" }
+      - { score: 5, behavior: "把『演示须用真实数据随机抽样』写入团队演示规范，对外演示前对照规范自查并留存抽样记录。" }
+---
+
+## 专家按语
+
+这一范式把赌注管理工程化了。scaling 的可外推性让重大路线决策可以在百分之一的算力上完成预演。preparedness 门禁保证能力的高速推进不透支安全信用。两者的共同底座是判据前置：赌注可以下，但判据必须在下注前公开。
+
+与 Anthropic 切片对照，两者共享经验主义底座。但 OpenAI 范式更强调部署即研究。真实用户分布被视为最大的实验资产。产品发布的意义被重新定义为数据回路的起点。这是 AI-Native 组织与传统『先研发后交付』流水线的最深刻分野。

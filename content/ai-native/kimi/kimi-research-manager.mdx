@@ -1,0 +1,183 @@
+---
+id: "kimi-research-manager"
+meta:
+  organization: "Kimi"
+  level_or_role: "研究经理 / Product Lead"
+  paradigm: "ai-native"
+  domain: "Product Engineer"
+  version_tag: "能力爬坡期范式（产品驱动的研究管理）"
+  tier_axis: 8
+  title: "Kimi 研究经理范式：产品驱动下的研究管理"
+  summary: "AI-Native 管理的产品型变体：既为产品交付节奏负责，又守住研究深度不被产品带偏。用 eval 契约连接产品与研究，把用户真实使用当作最大的实验场。"
+  tags: ["产品驱动", "研究-产品双线", "Eval 契约", "用户实验场", "复合团队"]
+  source:
+    type: "公开材料归纳"
+    note: "基于月之暗面公开的产品迭代实践、团队协作分享归纳，非亲历者投稿"
+mental_models:
+  underlying_assumptions:
+    - "产品驱动的研究管理：研究成果必须落到产品体验，脱离产品的研究在产品型组织里没有出口。"
+    - "双线负责：既要为产品交付节奏负责，也要守住研究深度，不为一方牺牲另一方。"
+    - "小团队敏捷：产品迭代以周计，研究要快但不浮，用 eval 守住深度不被速度冲掉。"
+    - "用户真实使用是最大的实验场：产品数据回流研究，研究改进反哺产品，形成回路。"
+    - "要复合人才：产品型研究组织需要既懂研究又懂产品的人，纯研究或纯产品都难协同。"
+  primary_metrics:
+    - name: "产品-研究转化率"
+      definition: "研究成果落到产品可感知体验的比例。"
+      anti_signal: "论文/研究产出数——不转化的研究在产品型组织里是成本。"
+    - name: "交付节奏"
+      definition: "功能从研究到上线的周期，衡量研究到产品的管道效率。"
+      anti_signal: "上线功能数量——数量不看效果是虚荣。"
+    - name: "研究深度（eval 达标）"
+      definition: "核心能力在 eval 上的提升，守住不被产品速度冲掉。"
+      anti_signal: "产品迭代速度——只看速度会牺牲深度。"
+    - name: "用户价值"
+      definition: "留存、满意度、任务完成率，产品型组织的最终读数。"
+      anti_signal: "发版频率——发得多不等于用户价值高。"
+  boundary_awareness:
+    - "研究经理的边界是产品交付与研究深度的平衡，不为一方牺牲另一方。"
+    - "对上：产品结果与研究进展双线汇报，不用一方掩盖另一方。"
+    - "对下：给研究员产品上下文，也保留研究自由，不把研究员变成功能工程师。"
+    - "产品与研究的接口是 eval 契约：产品需求转成 eval，研究达标即接入，不达标即降级。"
+scenarios:
+  - id: "s1-product-vs-depth"
+    category: "cross-team-conflict"
+    scenario_title: "产品团队要求下个版本必须上一个依赖新模型能力的功能，研究团队认为该能力尚未成熟、上线会拉低体验，双方争执不下，你作为研究经理要拍板。"
+    junior_approach: "偏袒产品强行上线，体验翻车；或者偏袒研究无限拖延，产品错过窗口。"
+    senior_approach: "用 eval 数据说明能力边界，设计分阶段上线（成熟部分先上、不成熟部分降级或人工兜底），产品与研究共同定验收口径与扩量条件。"
+    trade_offs: "选择分阶段上线——代价是首发功能不完整、需管理产品预期，换体验不翻车与研究不被绑架。"
+    senior_steps:
+      - move: "用 eval 数据说明能力边界：哪些场景达标、哪些不达标，量化而非立场。"
+        rationale: "产品与研究的争执是信息问题；eval 数据让双方看同一组事实。"
+      - move: "分阶段上线：成熟部分先上、不成熟部分降级或人工兜底。"
+        rationale: "不为一方牺牲另一方；分阶段让产品有交付、研究有余地。"
+      - move: "产品与研究共同定验收口径与扩量条件，用数据驱动是否放量。"
+        rationale: "共同契约让双方从对手变成共同解释数据的人。"
+    trade_off_details:
+      - choose: "分阶段上线 + eval 验收"
+        over: "强行全上或无限拖延"
+        cost: "首发功能不完整、管理预期成本；换体验不翻车与研究深度保住"
+  - id: "s2-product-vs-research"
+    category: "ambiguous-requirements"
+    scenario_title: "产品提出一堆体验优化需求，研究团队想做底层能力提升，两者抢同一批研究人力，而人力只够专注一边。"
+    junior_approach: "全接产品需求，研究深度荒废、长期竞争力流失；或者全做研究，产品体验停滞、用户流失。"
+    senior_approach: "分层处理：产品需求用现有能力快速解决（研究不深度介入），研究人力集中投底层能力。用 roadmap 对齐产品短期与研究长期，说清两者的资源分配与回报节奏。"
+    trade_offs: "选择分层 + roadmap 对齐——代价是要花精力划清边界与讲清节奏，换产品短期与研究长期都不被牺牲。"
+    senior_steps:
+      - move: "分层：产品需求用现有能力快速解决，研究人力集中投底层能力提升。"
+        rationale: "产品需求与研究方向是两种时间尺度，混在一起必然互相拖累。"
+      - move: "用 roadmap 对齐产品短期与研究长期，说清资源分配与回报节奏。"
+        rationale: "roadmap 让产品知道研究何时反哺、研究知道产品何时要支持。"
+      - move: "守住研究人力不被产品需求蚕食，定期校验分配。"
+        rationale: "产品需求天然强势，不守边界的管理会让研究慢慢消失。"
+    trade_off_details:
+      - choose: "分层 + roadmap 对齐"
+        over: "全接产品或全做研究"
+        cost: "划边界与讲节奏的精力；换产品与研究双线健康"
+  - id: "s3-eval-vs-ux"
+    category: "eval-disagreement"
+    scenario_title: "研究团队说模型能力提升了（eval 上涨），但产品上线后用户体感没变化，产品团队质疑研究的价值。"
+    junior_approach: "研究方坚持『eval 涨了就是进步』，产品方坚持『用户没感觉就是没用』，互相指责。"
+    senior_approach: "对齐 eval 与产品指标的映射：研究 eval 的涨分是否传导到用户体验，找传导断点（eval 测的与用户要的是否一致）。用产品真实数据校准研究方向。"
+    trade_offs: "选择用产品数据校准研究——代价是承认 eval 与用户价值有落差、需调整方向，换研究不脱离真实需求。"
+    senior_steps:
+      - move: "对齐 eval 与产品指标的映射：涨分是否传导到体验，量化传导率。"
+        rationale: "eval 是能力的采样，不是用户价值本身；传导率揭示两者的落差。"
+      - move: "找传导断点：eval 测的与用户要的是否一致，哪里断了。"
+        rationale: "落差不是谁对谁错，而是测量与需求没对齐；找到断点才能修。"
+      - move: "用产品真实数据校准研究方向，让 eval 更贴近用户价值。"
+        rationale: "产品是研究的实验场；校准让 eval 越来越接近真实价值。"
+    trade_off_details:
+      - choose: "产品数据校准研究"
+        over: "各执一词或只信 eval"
+        cost: "承认落差、调整方向；换研究不脱离真实需求"
+workflow_and_toolchains:
+  collaboration_interfaces:
+    - "eval 契约：产品需求转成 eval，研究达标即接入、不达标即降级，双方共定验收。"
+    - "roadmap 对齐：产品短期与研究长期的资源分配与回报节奏，定期校验。"
+    - "用户数据回流：产品真实使用数据结构化回收，成为研究的实验场与校准源。"
+    - "双线汇报：产品结果与研究进展同时向上，不用一方掩盖另一方。"
+  agent_and_automation_leverage:
+    - "eval 自动化：产品场景的回归评测 CI 化，能力迭代自动出达标率。"
+    - "用户行为分析：真实使用的失败模式自动聚类，回流为 eval 与研究输入。"
+    - "产品-研究看板：转化率、交付节奏、用户价值同屏，双线归因有据。"
+  delivery_loop:
+    trigger: "产品迭代节点 + 研究能力提升"
+    loop: ["产品需求转 eval 契约", "研究达标/降级接入", "真实使用数据回流", "校准研究方向", "双线复盘转化率"]
+    cadence: "产品周迭代 + 研究里程碑"
+    evidence: "eval 契约与达标率、产品-研究转化率、用户价值数据"
+anti_patterns:
+  - name: "产品绑架研究"
+    manifestation: "研究人力全被产品需求吞掉，底层能力长期不投入，研究深度逐渐消失。"
+    why_it_fails: "产品型组织的研究是长期竞争力；被产品绑架会让组织短期有交付、长期无壁垒。"
+    correction: "守住研究人力分配，产品需求用现有能力解决，研究聚焦底层，roadmap 校验。"
+  - name: "研究脱离产品"
+    manifestation: "研究只追能力不看落地，产品体验停滞、用户流失，研究成果无人用。"
+    why_it_fails: "产品型组织的研究不落地就是成本；脱离产品的研究无法获得资源与反馈。"
+    correction: "研究成果以产品可感知体验验收，eval 契约连接研究与产品。"
+  - name: "唯快不破"
+    manifestation: "为产品上线速度牺牲研究深度与质量，上线后体验翻车。"
+    why_it_fails: "产品速度建立在能力成熟度上；为快牺牲深度会以体验翻车偿还。"
+    correction: "用分阶段上线平衡速度与深度，eval 达标才扩量。"
+self_assessment_checks:
+  - id: "sa-decision-krm"
+    dimension: "decision"
+    weight: 0.25
+    question: "产品要上一个依赖未成熟模型能力的功能，研究认为会拉低体验。"
+    behavioral_anchor: "用 eval 数据说明能力边界，设计分阶段上线，产品与研究共同定验收与扩量条件。"
+    anchors:
+      - { score: 1, behavior: "偏袒产品强行上线。" }
+      - { score: 2, behavior: "偏袒研究无限拖延。" }
+      - { score: 3, behavior: "用 eval 说明边界，分阶段上线，共定验收与扩量条件。" }
+      - { score: 4, behavior: "成熟部分先上、不成熟降级，用数据驱动放量。" }
+      - { score: 5, behavior: "该分阶段契约成为产品-研究协作的标准，不再每次拉扯。" }
+  - id: "sa-boundary-krm"
+    dimension: "boundary"
+    weight: 0.2
+    question: "产品需求与研究方向抢同一批研究人力。"
+    behavioral_anchor: "分层处理：产品需求用现有能力解决，研究人力投底层，roadmap 对齐节奏。"
+    anchors:
+      - { score: 1, behavior: "全接产品需求，研究荒废。" }
+      - { score: 2, behavior: "全做研究，产品饿死。" }
+      - { score: 3, behavior: "分层：产品用现有能力、研究投底层，roadmap 对齐。" }
+      - { score: 4, behavior: "守住研究人力不被蚕食，定期校验分配。" }
+      - { score: 5, behavior: "产品-研究资源分配机制化，双线都不被牺牲。" }
+  - id: "sa-leverage-krm"
+    dimension: "leverage"
+    weight: 0.2
+    question: "你要同时推进产品迭代与研究深度，人力有限。"
+    behavioral_anchor: "用 eval 自动化与用户数据回流，把产品需求快速解决、研究聚焦高价值，人力花在刀刃上。"
+    anchors:
+      - { score: 1, behavior: "人力平摊，两边都做不深。" }
+      - { score: 2, behavior: "靠加班硬扛。" }
+      - { score: 3, behavior: "eval 自动化 + 用户数据回流，产品快解、研究聚焦。" }
+      - { score: 4, behavior: "产品-研究看板归因，资源投高回报处。" }
+      - { score: 5, behavior: "自动化与回流机制化，人力持续放大。" }
+  - id: "sa-loop-krm"
+    dimension: "loop"
+    weight: 0.2
+    question: "研究说 eval 涨了，产品说用户没感觉。"
+    behavioral_anchor: "对齐 eval 与产品指标映射，找传导断点，用产品数据校准研究方向。"
+    anchors:
+      - { score: 1, behavior: "各执一词，互相指责。" }
+      - { score: 2, behavior: "只信 eval 或只信体感。" }
+      - { score: 3, behavior: "对齐 eval-产品映射，找传导断点，校准研究方向。" }
+      - { score: 4, behavior: "用真实使用数据持续校准 eval 与研究方向。" }
+      - { score: 5, behavior: "eval 与用户价值的映射机制化，研究始终贴近真实需求。" }
+  - id: "sa-antipattern-krm"
+    dimension: "antipattern"
+    weight: 0.15
+    question: "产品需求源源不断，研究人力快被吞光。"
+    behavioral_anchor: "守住研究人力分配，产品用现有能力解决、研究聚焦底层，防止产品绑架研究。"
+    anchors:
+      - { score: 1, behavior: "研究人力全给产品，深度消失。" }
+      - { score: 2, behavior: "拒绝一切产品需求，产品停滞。" }
+      - { score: 3, behavior: "守研究人力、产品用现有能力、研究投底层。" }
+      - { score: 4, behavior: "roadmap 校验双线，定期复盘分配。" }
+      - { score: 5, behavior: "产品-研究双线平衡成为组织原则，长期竞争力保住。" }
+---
+
+## 专家按语
+
+Kimi 研究经理是 AI-Native 管理的产品型变体。它与 `anthropic-research-manager`（纯研究型）形成一对有价值的对照。后者的核心是为研究回路让路、移除摩擦。前者的核心是让研究与产品互相不绑架。产品驱动组织的研究经理，既要懂产品的紧迫，又要守研究的深度。他的暗知识在于用 eval 契约把两种时间尺度缝合。
+
+与 `kimi-product-engineer`（IC）对照，同一组织里，IC 的暗知识是为能力波动设计。经理的暗知识是让 IC 能在产品节奏里持续做研究。产品型 AI 组织能不能留住研究人才，往往就看这个角色做得好不好。

@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0c0d10;
+  --panel: #14161b;
+  --panel-2: #1a1d24;
+  --border: #262a33;
+  --text: #e7e9ee;
+  --muted: #8b91a0;
+  --hierarchical: #f59e0b;
+  --ai-native: #8b5cf6;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* docs markdown 渲染 */
+.md-doc h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+.md-doc h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.75rem;
+}
+.md-doc h3 {
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 1.25rem 0 0.5rem;
+}
+.md-doc p {
+  margin: 0.75rem 0;
+  line-height: 1.75;
+  font-size: 0.9rem;
+}
+.md-doc ul,
+.md-doc ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+.md-doc ul {
+  list-style: disc;
+}
+.md-doc ol {
+  list-style: decimal;
+}
+.md-doc li {
+  margin: 0.35rem 0;
+  line-height: 1.65;
+  font-size: 0.9rem;
+}
+.md-doc code {
+  background: var(--panel-2);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+.md-doc pre {
+  background: var(--panel-2);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.md-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+}
+.md-doc th,
+.md-doc td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.md-doc th {
+  background: var(--panel-2);
+}
+.md-doc a {
+  color: var(--ai-native);
+  text-decoration: underline;
+}
+.md-doc blockquote {
+  border-left: 4px solid var(--border);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: var(--muted);
+}
+.md-doc hr {
+  border-color: var(--border);
+  margin: 1.5rem 0;
+}
+.md-doc strong {
+  color: var(--text);
+  font-weight: 600;
+}

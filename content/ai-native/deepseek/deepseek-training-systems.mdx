@@ -1,0 +1,177 @@
+---
+id: "deepseek-training-systems"
+meta:
+  organization: "DeepSeek"
+  level_or_role: "训练系统 / Infra 研发"
+  paradigm: "ai-native"
+  domain: "Infra"
+  version_tag: "能力爬坡期范式（约束驱动的系统创新）"
+  tier_axis: 7
+  title: "DeepSeek 训练系统范式：工程即研究的系统创新"
+  summary: "把算力约束当作系统创新的燃料：MoE 并行、混合精度、通信重叠这些效率工程本身是研究产出。研究员下沉改 kernel，用复现与开源换生态红利。"
+  tags: ["工程即研究", "约束驱动创新", "MoE 并行", "训练效率", "全栈下沉"]
+  source:
+    type: "公开材料归纳"
+    note: "基于 DeepSeek 公开技术报告、系统优化分享归纳，非亲历者投稿"
+mental_models:
+  underlying_assumptions:
+    - "约束驱动系统创新：算力与预算有限逼出的工程创新（MoE 并行、混合精度、通信重叠）不是无奈，而是最难被复制的护城河。"
+    - "工程即研究：训练系统的优化本身就是研究产出，写进技术报告，不是支撑部门的杂活。"
+    - "全栈下沉：研究员直接改 kernel、并行策略与框架，跨层问题就地解决，不等专职工程团队。"
+    - "效率是第一指标：同等算力的有效产出决定研究速度，规模不等于效率。"
+    - "复现与开源：系统创新详尽写进报告、开源换社区维护红利，闭门造车会失去生态。"
+  primary_metrics:
+    - name: "有效算力利用率（MFU）"
+      definition: "训练中实际用于计算的算力占比，系统优化的直接读数。"
+      anti_signal: "集群规模——堆卡不提效率是浪费。"
+    - name: "训练吞吐"
+      definition: "tokens/sec 或 samples/sec，研究迭代速度的物理基础。"
+      anti_signal: "训练时长——时间长不等于效果好。"
+    - name: "系统创新效率增益"
+      definition: "自研优化（MoE/精度/通信）带来的相对效率提升。"
+      anti_signal: "优化项数量——做了很多优化不等于有增益。"
+    - name: "故障自愈时间比"
+      definition: "训练故障自愈时间与 checkpoint 间隔之比，小于 1 意味着故障对训练不可见。"
+      anti_signal: "故障次数——次数少但恢复慢更致命。"
+  boundary_awareness:
+    - "Infra 的边界是训练系统（并行、通信、精度、容错），不是模型算法本身。"
+    - "与研究的关系：系统创新服务研究需求，工程改造即研究产出，但不越界改模型结构。"
+    - "对上：效率提升折算成算力成本节省或研究加速，用成本语言汇报。"
+    - "全栈下沉但有边界：研究员可改 kernel/框架，算法决策仍归研究。"
+scenarios:
+  - id: "s1-moe-parallel"
+    category: "uncertainty-exploration"
+    scenario_title: "你提出一个新的 MoE 并行策略，理论上能显著提升训练效率，但要改训练框架核心，验证周期长，而训练任务排期紧张。"
+    junior_approach: "等框架排期慢慢改；或者不验证直接全量改框架，风险高、可能改坏。"
+    senior_approach: "先小规模代理验证（单机/小集群测吞吐与收敛），确认收益再全量改造；改造过程与结果写进技术报告作为研究产出。"
+    trade_offs: "选择小规模代理验证——代价是多一步验证时间，换改造不盲、收益可证。"
+    senior_steps:
+      - move: "小规模代理验证：单机/小集群测吞吐、收敛与稳定性。"
+        rationale: "系统改造风险高；代理验证用小成本证伪，避免全量改坏。"
+      - move: "确认收益再全量改造，改造过程写进技术报告。"
+        rationale: "工程即研究；报告让系统创新成为可复现、可引用的产出。"
+    trade_off_details:
+      - choose: "代理验证 + 全量改造"
+        over: "等排期或盲改全量"
+        cost: "多一步验证时间；换改造不盲、收益可证"
+  - id: "s2-efficiency-vs-experiments"
+    category: "resource-contention"
+    scenario_title: "训练算力有限，你要在有限算力下跑出最好效果：是把算力全用来堆更多实验，还是先投入优化训练系统效率。"
+    junior_approach: "把算力全堆实验赌运气，效率低、同等算力跑得少。"
+    senior_approach: "先优化系统效率（混合精度、通信重叠、kernel 融合），让同等算力跑更多实验，效率提升是随每次训练复利的。"
+    trade_offs: "选择先提效再堆实验——代价是前置的优化投入，换长期每次训练都省下的算力复利。"
+    senior_steps:
+      - move: "profile 定位瓶颈：通信、精度、内存哪个是主要开销。"
+        rationale: "优化要基于测量；盲目优化会做无用功。"
+      - move: "针对瓶颈做系统优化（混合精度/通信重叠/kernel 融合），让同等算力跑更多实验。"
+        rationale: "效率提升是复利；一次优化惠及后续所有训练。"
+    trade_off_details:
+      - choose: "先提效再堆实验"
+        over: "算力全堆实验"
+        cost: "前置优化投入时间；换长期算力复利与更多实验"
+  - id: "s3-framework-debt"
+    category: "tech-debt"
+    scenario_title: "训练框架历史包袱重，新模型特性（如新注意力机制）接入困难，研究同学抱怨，但重构框架风险高、周期长。"
+    junior_approach: "大爆炸式重构，风险高、拖慢研究；或者忍受，新特性接入越来越难。"
+    senior_approach: "绞杀者式演进：新特性走新接口、旧接口只读维护，渐进重构，不让研究等框架；重构随模型迭代自然推进。"
+    trade_offs: "选择渐进重构——代价是双轨期复杂度，换研究不中断、重构风险可控。"
+    senior_steps:
+      - move: "新特性走新接口、旧接口只读，不让历史包袱拖累新接入。"
+        rationale: "渐进式让新需求即刻受益，重构不阻塞研究。"
+      - move: "重构随模型迭代自然推进，不搞大爆炸。"
+        rationale: "搭上迭代顺风车重构，风险与成本都最小。"
+    trade_off_details:
+      - choose: "绞杀者渐进重构"
+        over: "大爆炸重构或忍受"
+        cost: "双轨期复杂度；换研究不中断、重构风险可控"
+workflow_and_toolchains:
+  collaboration_interfaces:
+    - "同仓库协作：Infra 与研究共用训练框架仓库，系统改进直接 PR，不走跨团队工单。"
+    - "效率成本语言：系统优化折算成算力节省或研究加速，向上汇报用数字。"
+    - "技术报告产出：系统创新详尽写进报告，对内可接手、对外可复现。"
+    - "开源反哺：通用系统组件开源，换社区维护与改进红利。"
+  agent_and_automation_leverage:
+    - "性能 profile 自动化：吞吐、MFU、通信开销自动测量，优化有据。"
+    - "训练故障自愈：checkpoint 回滚、节点替换自动化，故障对训练不可见。"
+    - "回归评测 CI：系统改动自动跑吞吐与收敛回归，防改坏。"
+  delivery_loop:
+    trigger: "每个系统优化 / 训练里程碑"
+    loop: ["profile 定位瓶颈", "小规模代理验证", "全量改造", "效率增益测量", "写进报告并开源"]
+    cadence: "优化项（天到周）"
+    evidence: "profile 数据、效率增益对比、技术报告、开源组件"
+anti_patterns:
+  - name: "堆卡不创新"
+    manifestation: "靠加卡解决效率问题，不投入系统优化，效率长期低下。"
+    why_it_fails: "堆卡是线性成本，系统创新是复利；不创新会在算力竞争中被效率更高的对手拉开。"
+    correction: "把系统效率当研究问题持续投入，用 MFU 与吞吐衡量创新价值。"
+  - name: "工程研究脱节"
+    manifestation: "Infra 闭门造车，优化脱离研究真实需求，研究不用。"
+    why_it_fails: "脱节的优化是自嗨，研究不采用就是纯浪费；工程即研究的前提是服务研究。"
+    correction: "系统创新从研究需求出发，与研究同仓库协作、同目标对齐。"
+  - name: "过早优化"
+    manifestation: "还没跑通就优化细节，优化了不重要的部分，复杂度上升。"
+    why_it_fails: "过早优化浪费精力、增加复杂度，还可能优化错地方。"
+    correction: "先跑通再优化，优化基于 profile 定位的真实热点。"
+self_assessment_checks:
+  - id: "sa-decision-dts"
+    dimension: "decision"
+    weight: 0.25
+    question: "有限算力下，你要决定先堆实验还是先优化训练系统效率。"
+    behavioral_anchor: "先 profile 定位瓶颈并优化系统效率，让同等算力跑更多实验，效率提升长期复利。"
+    anchors:
+      - { score: 1, behavior: "算力全堆实验赌运气。" }
+      - { score: 2, behavior: "盲目优化，不做测量。" }
+      - { score: 3, behavior: "profile 定位瓶颈，优化系统效率，同等算力跑更多实验。" }
+      - { score: 4, behavior: "优化增益量化，折算成算力节省或研究加速。" }
+      - { score: 5, behavior: "效率创新成为团队核心能力，持续复利。" }
+  - id: "sa-boundary-dts"
+    dimension: "boundary"
+    weight: 0.2
+    question: "你要改训练框架核心，涉及研究同学的模型代码。"
+    behavioral_anchor: "改系统层（并行/通信/精度）服务研究，不越界改模型算法，与研究同仓库协作。"
+    anchors:
+      - { score: 1, behavior: "越界改模型算法。" }
+      - { score: 2, behavior: "只改系统，不问研究需求。" }
+      - { score: 3, behavior: "改系统服务研究，不越界改算法，同仓库协作。" }
+      - { score: 4, behavior: "系统改进直接 PR、与研究对齐目标。" }
+      - { score: 5, behavior: "Infra-研究协作机制化，工程即研究成为团队文化。" }
+  - id: "sa-leverage-dts"
+    dimension: "leverage"
+    weight: 0.2
+    question: "训练效率低，同等算力跑得少。"
+    behavioral_anchor: "用混合精度、通信重叠、kernel 融合等系统优化提升效率，让同等算力产出更多。"
+    anchors:
+      - { score: 1, behavior: "靠加卡解决。" }
+      - { score: 2, behavior: "盲目优化不做测量。" }
+      - { score: 3, behavior: "混合精度/通信/kernel 优化提升效率。" }
+      - { score: 4, behavior: "优化增益量化并复用到所有训练。" }
+      - { score: 5, behavior: "系统创新开源，换社区维护红利。" }
+  - id: "sa-loop-dts"
+    dimension: "loop"
+    weight: 0.2
+    question: "你做了一个训练系统优化，如何证明它有效。"
+    behavioral_anchor: "用 profile 与吞吐/MFU 数据证明增益，写进技术报告，可复现。"
+    anchors:
+      - { score: 1, behavior: "感觉变快了就算。" }
+      - { score: 2, behavior: "只看训练时长。" }
+      - { score: 3, behavior: "profile + 吞吐/MFU 数据证明增益，写进报告。" }
+      - { score: 4, behavior: "增益含代价（复杂度/稳定性），结论完整。" }
+      - { score: 5, behavior: "系统创新成为可复现、可引用的研究产出。" }
+  - id: "sa-antipattern-dts"
+    dimension: "antipattern"
+    weight: 0.15
+    question: "训练框架历史包袱重，新特性接入难。"
+    behavioral_anchor: "用绞杀者式渐进重构（新特性走新接口、旧接口只读），不让研究等框架。"
+    anchors:
+      - { score: 1, behavior: "大爆炸重构，风险高。" }
+      - { score: 2, behavior: "忍受，越来越难接入。" }
+      - { score: 3, behavior: "绞杀者渐进重构，新特性走新接口。" }
+      - { score: 4, behavior: "重构随迭代自然推进，不阻塞研究。" }
+      - { score: 5, behavior: "框架演进机制化，历史包袱不再拖累创新。" }
+---
+
+## 专家按语
+
+DeepSeek 训练系统范式把工程即研究推到极致。算力约束不是限制，而是创新压力源。MoE 并行、混合精度、通信重叠这些效率工程本身成为技术报告的主角。这与 `baidu-ernie-training-infra`（层级运维文化下的 Goodput）和 `mimo-core-research`（效率实验学）形成三方对照。ernie 守稳定，mimo 做实验，DeepSeek 把系统创新本身变成研究。
+
+约束驱动创新是这一层最反直觉的暗知识。资源充裕的团队学不会。因为约束逼出的方法论只有在压力下才会生长。这也是小算力团队能在训练效率上建立代际优势的根源。

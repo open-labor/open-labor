@@ -1,0 +1,192 @@
+---
+id: "kimi-product-engineer"
+meta:
+  organization: "Kimi"
+  level_or_role: "Product Engineer"
+  paradigm: "ai-native"
+  domain: "Product Engineer"
+  version_tag: "能力爬坡期范式（消费级 AI 产品快速迭代）"
+  tier_axis: 6
+  title: "Kimi 产品工程师范式：为能力波动而设计的产品闭环"
+  summary: "在模型每周都在变的前提下做产品：demo 先行验证价值、把 bad case 数据回流当最高优先级语料、用优雅降级吸收模型抖动、一人打通从交互到 eval 的全栈。"
+  tags: ["Demo-driven", "长上下文", "Bad case 回流", "优雅降级", "Dogfooding"]
+  source:
+    type: "公开材料归纳"
+    note: "基于月之暗面公开产品迭代实践、长上下文产品分享归纳，非亲历者投稿"
+mental_models:
+  underlying_assumptions:
+    - "模型每周都在变，产品必须为能力波动而设计：任何依赖模型单一行为的交互都要有降级路径，而不是假设能力恒定。"
+    - "不要做模型下个版本就会内置的功能：与基础能力赛跑的功能注定白做，产品价值要长在模型能力与用户场景的缝隙里。"
+    - "Demo 先于立项：一天能跑通的粗糙 demo 比一周的 PPT 论证更接近真相；跑不通的 demo 同样是高价值结论。"
+    - "用户的真实对话（脱敏后）是最高优先级语料：bad case 的聚类分布决定产品迭代方向，优先级高于任何内部直觉。"
+    - "产品工程师拥有从交互、prompt、eval 到数据回流的完整闭环：把问题推给『算法团队』等于放弃解决问题。"
+  primary_metrics:
+    - name: "次日留存 / 对话完成率"
+      definition: "用户第二天是否回来；单次对话是否走到用户目标完成（而非中途放弃）。"
+      anti_signal: "对话轮数——轮数多可能是模型绕圈，不一定是粘性。"
+    - name: "人工接管率"
+      definition: "模型输出后用户必须手动修改/重写的比例，产品体验的直接温度计。"
+      anti_signal: "点赞率——点赞的用户往往是少数活跃粉，有强选择偏差。"
+    - name: "首字延迟 TTFT"
+      definition: "从提交到第一个可见 token 的时间；对体感的影响远大于总时长。"
+      anti_signal: "平均总生成时长——用户对开头等待远比对结尾敏感。"
+    - name: "上下文利用率"
+      definition: "长上下文场景中，模型实际有效引用的用户历史/文件比例，验证产品差异化的真实成色。"
+      anti_signal: "上传量——用户传了 200 页 PDF 不代表模型用上了。"
+    - name: "Bad case 回流率"
+      definition: "线上 bad case 被结构化回收进评测集/训练数据的比例，闭环健康度指标。"
+      anti_signal: "客服工单关闭速度——关得快不等于案例进了语料。"
+  boundary_awareness:
+    - "产品工程师的边界是『端到端的用户体验』而非职能分工：交互文案、prompt 策略、eval 用例、埋点口径都是同一只手。"
+    - "模型能力与产品承诺之间要有一道显式的墙：对外宣传的功能必须是 eval 锁定过的能力，不能拿 demo 状态对外承诺。"
+    - "与算法团队的接口是 eval 集与 bad case 数据集，不是『这句 prompt 帮我调一下』：把产品需求沉淀为数据，而不是消耗对方的排期。"
+    - "安全与合规边界（内容安全、隐私脱敏）不可谈判：用户数据进语料前必须过脱敏管道，这是流程不是美德。"
+scenarios:
+  - id: "s1-model-jitter"
+    category: "incident"
+    scenario_title: "模型升级后产品的核心场景（长文档总结）用户投诉率一夜上涨 40%：同一种文件布局下摘要开始漏章节，而你没有任何模型侧的变更权限，客服工单正在堆积，下周还有一次更大规模的模型切换。"
+    junior_approach: "在用户群道歉并手动给投诉用户补偿；或者紧急写一堆针对漏章节的 prompt 补丁，模型下次升级后补丁再失效，进入无限循环。"
+    senior_approach: "先把投诉样本转成回归 eval 集量化抖动幅度。产品侧立即上优雅降级（分节总结+完整性校验提示），把体验从『静默出错』改成『显式确认』。把聚类后的 bad case 数据集正式移交算法团队作为升级回归门禁。prompt 补丁只做临时止血并标注失效条件。"
+    trade_offs: "选择显式确认的降级体验，而非死磕 prompt 补丁假装没问题——代价是交互变重、部分用户感知到『产品在防着我』，换的是不再静默出错。"
+    senior_steps:
+      - move: "24 小时内把投诉样本转成 30-50 条回归 eval，量化新旧模型的差距分布：哪些文档布局坏了、坏多少。"
+        rationale: "先测量后行动；没有 eval 的紧急修复无法区分『真修复』和『碰巧好了』，也无法在下次升级前预警。"
+      - move: "产品侧上线优雅降级：长文档强制分节输出 + 完整性自检清单，把静默错误转化为用户可见的确认点。"
+        rationale: "为能力波动设计：产品假设『模型会漏』，用交互兜住而不是赌模型不漏。"
+      - move: "bad case 聚类成数据集移交算法团队，并要求进入模型升级的发布门禁；同时给临时 prompt 补丁标注失效条件。"
+        rationale: "产品工程师与模型的接口是数据不是 prompt 魔咒；标注失效条件的补丁才不会变成下次升级的暗礁。"
+    trade_off_details:
+      - choose: "显式确认的降级体验"
+        over: "死磕 prompt 补丁维持原交互"
+        cost: "交互变重，部分用户感知到摩擦；换的是错误不再静默发生"
+      - choose: "bad case 数据集进模型发布门禁"
+        over: "等算法团队自行排期修复"
+        cost: "数据整理与门禁谈判消耗数天；换的是同类抖动下次被流程拦截"
+  - id: "s2-retention-vague"
+    category: "ambiguous-requirements"
+    scenario_title: "增长负责人提出『下个双月把次日留存提升 20%』，没有说靠什么：候选方向有新交互形态、模型能力增强、用户引导优化，三边都想要，产品团队只有 3 个人。"
+    junior_approach: "三个方向各做一点，每边都浅尝辄止；或者选自己最熟的交互方向闷头做，双月后留存纹丝不动，无法解释。"
+    senior_approach: "先做 bad case 聚类与流失归因，用数据裁决三个方向的假设强度。每个方向先做一天级 demo 验证核心假设（demo-driven），用 demo 数据淘汰两个。赢的方向全栈闭环落地并预埋 eval 与灰度实验。"
+    trade_offs: "选择用一天级 demo 淘汰方向，而非三线并进——代价是 demo 结论可能受限于粗糙实现产生误杀，需对被砍方向标注复活条件。"
+    senior_steps:
+      - move: "对流失用户的对话数据做 bad case 聚类：模型能力问题、交互断点问题、预期错位问题各占多少。"
+        rationale: "留存问题的答案通常已经在用户对话数据里；聚类分布直接裁决三个方向的假设强度。"
+      - move: "每个候选方向做一天级 demo：新交互用 mock 模型跑通核心链路，模型增强用现有模型上限压测，引导优化用 5 人可用性测试。"
+        rationale: "demo 是最便宜的假设粉碎机；跑不通的 demo 与跑通的一样值钱。"
+      - move: "赢的方向以全栈闭环落地：交互 + prompt + eval 基线 + 灰度实验一个 sprint 内完成，预埋留存归因埋点。"
+        rationale: "一人闭环消除跨职能传递损耗；没有 eval 基线的功能在模型下次升级时无法自证清白。"
+    trade_off_details:
+      - choose: "一天级 demo 淘汰方向"
+        over: "三方向资源均分齐头并进"
+        cost: "粗糙 demo 可能误杀慢热方向；为每个被砍方向标注复活条件对冲"
+  - id: "s3-context-feature"
+    category: "uncertainty-exploration"
+    scenario_title: "你发现部分重度用户把整个项目资料传进对话做持续咨询，行为像在用『记忆』但体验破碎：上下文频繁超限、早期结论被遗忘。要不要把这个意外用法做成正式的长上下文记忆功能，没人说得清，且基础模型团队半年后可能原生支持类似能力。"
+    junior_approach: "写一份完整 PRD 走立项评审，三个月后功能还没上线，模型已经原生支持了类似能力；或者直接不做，理由是『模型以后会内置』。"
+    senior_approach: "先验证需求真伪：从对话数据统计这类用法的规模与付费意愿信号。用一周做出 hacky 的记忆管理原型（文件索引+摘要锚点）给种子用户 dogfooding。以『产品层体验差异化』定位立项，明确与模型原生能力的边界与共存策略。"
+    trade_offs: "选择做产品层记忆体验并接受未来与模型原生能力共存，而非等模型内置。代价是维护两套上下文来源的融合复杂度，换的是当下的差异化与用户关系。"
+    senior_steps:
+      - move: "从对话数据验证需求真伪：这类用法周活占比、用户是否重复回来、失败点分布。"
+        rationale: "意外用法是产品进化的最高质量信号，但它首先需要被证明是需求而不是噪声。"
+      - move: "一周做出 hacky 原型（文件索引 + 滚动摘要锚点 + 显式记忆卡）交给 20 个种子用户 dogfooding，每天看行为数据。"
+        rationale: "demo-driven：一周的原型能回答『用户要的是功能还是幻觉』，比立项评审快一个数量级。"
+      - move: "以产品层体验定位立项：记忆的展示、编辑、遗忘权等交互层做成产品资产，与模型原生上下文能力设计共存策略而非对抗。"
+        rationale: "不要与基础能力赛跑：把价值锚在交互与信任层（可编辑、可遗忘、可审计），这层模型不会替你做。"
+    trade_off_details:
+      - choose: "产品层记忆体验，接受与模型原生能力共存"
+        over: "等模型团队原生支持后再做"
+        cost: "双上下文来源的融合与冲突处理复杂度；可能有一部分工作被模型升级作废"
+      - choose: "一周 hacky 原型 dogfooding"
+        over: "完整 PRD 走正式立项"
+        cost: "原型代码是一次性的；但立项所需的证据由此而来"
+workflow_and_toolchains:
+  collaboration_interfaces:
+    - "异步优先：需求与结论全部落在文档与 eval 集上，会议只用于 demo 演示与分歧辩论。"
+    - "每日 dogfood 频道：全员使用最新版本并结构化上报 bad case（触发输入/期望/实际），是产品决策的第一数据源。"
+    - "与算法团队的接口协议：需求以数据集 + eval 指标形式提出，不占用对方排期调 prompt；每周对齐一次 eval 基线变化。"
+    - "周度 demo review：进展展示以可交互 demo + 数据为主，禁止只讲计划和截图。"
+  agent_and_automation_leverage:
+    - "Agent 批量生成测试对话与边界用例：新功能上线前用 agent 模拟 200 类用户行为压测交互鲁棒性。"
+    - "CI 内置 eval 门禁：核心场景的回归 eval 随模型升级与 prompt 变更自动执行，跌破基线即阻断发布。"
+    - "Bad case 自动聚类：线上失败对话按根因自动聚类入回流管道，人工只复核聚类质量。"
+  delivery_loop:
+    trigger: "bad case 聚类报告 + 每周模型升级通知"
+    loop: ["bad case 聚类与归因", "转成 eval 用例锁定问题", "最小改动修复（交互降级/prompt/数据回流）", "灰度放量验证留存与接管率", "结论沉淀进 eval 基线与产品文档"]
+    cadence: "单修复 1-3 天，周度 demo review"
+    evidence: "eval 基线对比报告；灰度实验的留存/接管率数据；bad case 回流记录"
+anti_patterns:
+  - name: "Prompt 补丁堆叠"
+    manifestation: "针对每个 bad case 加一条 prompt 规则，几个月后 prompt 膨胀到数千 token，互相冲突且无人敢删。"
+    why_it_fails: "补丁面向个案而非分布，新模型版本下整体失效且无法定位是哪条补丁坏事；本质是没有 eval 的工程。"
+    correction: "每条补丁必须关联触发它的 eval 用例；补丁数量超过 10 条时强制重构为结构化方案。"
+  - name: "演示幻觉"
+    manifestation: "对外演示依赖挑好的对话与精心准备的输入，真实用户环境里功能成功率远低于演示。"
+    why_it_fails: "演示状态与真实分布脱节，透支内外部信任；更危险的是团队开始按演示标准而非用户标准做决策。"
+    correction: "对外演示必须使用过去 7 天真实用户（脱敏）对话中的随机抽样，失败 case 一并展示。"
+  - name: "与模型赛跑"
+    manifestation: "投入重兵做『更会写作文/更会写代码』这类基础能力增强型的产品功能，模型下个版本原生内置后归零。"
+    why_it_fails: "基础能力的进步速度由 scaling 决定，产品层在这些维度没有胜算；沉没成本还会拖住团队错过真正的场景缝隙。"
+    correction: "功能立项时必答一题：『模型下一代内置此能力后，我们剩下什么』——答不出场景、数据或信任层价值的直接砍掉。"
+self_assessment_checks:
+  - id: "sa-decision-k1"
+    dimension: "decision"
+    weight: 0.25
+    question: "模型升级让你的明星功能成功率从 92% 跌到 71%，修复需要算法团队支持，而他们下个版本才能排期。"
+    behavioral_anchor: "产品侧先上优雅降级止血（显式确认/能力降级），同时把 bad case 转成 eval 集与数据证据推动排期，而不是等待或堆 prompt 补丁。"
+    anchors:
+      - { score: 1, behavior: "在用户群里道歉，等算法团队修。" }
+      - { score: 2, behavior: "疯狂调 prompt 直到数字看起来回升。" }
+      - { score: 3, behavior: "产品侧先上优雅降级止血，同时把 bad case 转成 eval 集与数据证据推动排期。" }
+      - { score: 4, behavior: "推动该 eval 集进入模型发布门禁，让同类抖动下次被流程拦截。" }
+      - { score: 5, behavior: "把『能力波动预案』作为功能上线标准件：每个功能发布时附带降级方案与回归 eval。" }
+  - id: "sa-boundary-k1"
+    dimension: "boundary"
+    weight: 0.2
+    question: "算法团队说『你们产品的效果问题本质是 prompt 写得差』，让你自己调好再提需求。"
+    behavioral_anchor: "把问题沉淀为数据集与 eval 指标提出（对方接口是数据不是 prompt），同时主动上调 prompt 的部分自己闭环，不陷入职能地盘争论。"
+    anchors:
+      - { score: 1, behavior: "在群里争执谁的锅，问题原样搁置。" }
+      - { score: 2, behavior: "默默自己调 prompt，不再提需求。" }
+      - { score: 3, behavior: "把问题沉淀为数据集与 eval 指标提出，同时主动上调 prompt 的部分自己闭环。" }
+      - { score: 4, behavior: "与对方约定明确的接口协议：什么走数据集、什么走 prompt、什么走训练。" }
+      - { score: 5, behavior: "把接口协议工具化（bad case 一键回流到对方管道），让协作成本趋近于零。" }
+  - id: "sa-leverage-k1"
+    dimension: "leverage"
+    weight: 0.2
+    question: "新功能上线前需要验证 200 类用户输入下的交互鲁棒性，而你只有 3 天。"
+    behavioral_anchor: "用 agent 批量生成与执行测试对话，人只设计用例分布与判定标准，产出覆盖率报告而不是逐条手测。"
+    anchors:
+      - { score: 1, behavior: "只测自己和同事手头的十几个 case。" }
+      - { score: 2, behavior: "拉上全组人肉测两天。" }
+      - { score: 3, behavior: "用 agent 批量生成与执行测试对话，人只设计用例分布与判定标准。" }
+      - { score: 4, behavior: "把这套压测做成 CI 门禁，此后每次发布自动执行。" }
+      - { score: 5, behavior: "压测发现的失败模式自动回流进 bad case 语料管道，测试资产持续增值。" }
+  - id: "sa-loop-k1"
+    dimension: "loop"
+    weight: 0.2
+    question: "你上线了一个新交互，双周后留存涨了 3%，老板问『这 3% 真的是你的功能带来的吗』。"
+    behavioral_anchor: "灰度实验设计在先（对照组/分层抽样），能用实验数据回答归因，而不是事后讲故事。"
+    anchors:
+      - { score: 1, behavior: "讲故事：『时间线上高度吻合』。" }
+      - { score: 2, behavior: "事后找相关数据佐证，口径是补的。" }
+      - { score: 3, behavior: "灰度实验设计在先，能用实验数据回答归因。" }
+      - { score: 4, behavior: "附反例维度分析（哪些用户群没涨甚至跌了），结论含边界条件。" }
+      - { score: 5, behavior: "所有功能默认带实验与 eval 双基线上线，团队不再需要事后自证。" }
+  - id: "sa-antipattern-k1"
+    dimension: "antipattern"
+    weight: 0.15
+    question: "你的产品计划做一个『AI 帮你写周报』的重头功能，而这正是基础模型厂商发布会演示的标配能力。"
+    behavioral_anchor: "启动前先过『模型下一代内置后我们剩下什么』检验，把功能重新锚定在场景数据与工作流集成层，或直接砍掉。"
+    anchors:
+      - { score: 1, behavior: "照做，赌模型厂商不做的这么细。" }
+      - { score: 2, behavior: "不做，理由是『反正会内置』，但不留任何评估记录。" }
+      - { score: 3, behavior: "启动前先过『模型下一代内置后我们剩下什么』检验，重新锚定场景数据与工作流集成层，或直接砍掉。" }
+      - { score: 4, behavior: "把该检验写成团队功能立项的强制问题，全员可见。" }
+      - { score: 5, behavior: "建立产品价值分层地图（基础能力/场景数据/工作流集成/信任层），每个季度重新审视功能组合。" }
+---
+
+## 专家按语
+
+消费级 AI 产品的产品工程师范式，核心焦虑与研究员不同。研究员担心结论不可复现。产品工程师担心能力不可承诺。这一范式的全部机制都在回答一个问题：如何在底层持续漂移的地基上，盖出用户可以信赖的房子。答案有三件：优雅降级吸收抖动、eval 门禁锁定承诺、bad case 回流喂养迭代。
+
+它与传统大厂产品经理范式的分野也值得看。这里没有『PRD-评审-开发-测试』的职能流水线。产品工程师直接持有从交互到数据的完整闭环。与算法团队的接口被重新定义为数据集与 eval 指标。这可能是 AI-Native 组织里最重要的一条协作协议。

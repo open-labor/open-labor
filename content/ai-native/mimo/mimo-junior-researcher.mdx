@@ -1,0 +1,183 @@
+---
+id: "mimo-junior-researcher"
+meta:
+  organization: "MiMo"
+  level_or_role: "初级研究员 / 研究工程师"
+  paradigm: "ai-native"
+  domain: "Research"
+  version_tag: "能力爬坡期范式（小团队高人效的成长环境）"
+  tier_axis: 5
+  title: "MiMo 初级研究员范式：无层级保护下的快速成长"
+  summary: "AI-Native 执行层：小团队没有师傅带、没有明确边界，成长靠主动闭环与快速学习。主动找切入点、独立跑通最小闭环、用数据而非资历赢得话语权。"
+  tags: ["主动闭环", "最小实验", "复用杠杆", "失败归因", "自驱成长"]
+  source:
+    type: "公开材料归纳"
+    note: "基于 MiniMax 公开的团队实践、小团队协作分享归纳，非亲历者投稿"
+mental_models:
+  underlying_assumptions:
+    - "小团队无层级保护：没有师傅带、没有明确边界，成长靠主动闭环与快速学习，而非等待培养。"
+    - "全栈是默认配置：从数据到实验到部署都要碰，『这不是我的事』在小团队不存在。"
+    - "话语权来自跑出的数据：初级研究员的说服力来自实验结果，不来自资历或头衔。"
+    - "上下文靠主动获取：扁平组织里信息不会送到你面前，等待被安排等于放弃成长。"
+    - "快速迭代是生存方式：小团队高人效，慢下来就是掉队。"
+  primary_metrics:
+    - name: "实验吞吐"
+      definition: "跑通并产出结论的实验数、假设验证周期。"
+      anti_signal: "代码提交量——提交多不等于有结论。"
+    - name: "学习速度"
+      definition: "上手新领域、新工具、新范式的周期。"
+      anti_signal: "加班时长——用时间堆的学习不可规模化。"
+    - name: "独立闭环能力"
+      definition: "能否独立从假设走到结论（含评测、分析、复现）。"
+      anti_signal: "被分配任务的完成度——完成任务不等于能独立闭环。"
+    - name: "贡献被复用"
+      definition: "产出的工具、数据、方法被团队采用的比例。"
+      anti_signal: "个人产出量——不被复用的产出无法放大价值。"
+  boundary_awareness:
+    - "初级的边界是被分配的实验或模块，但小团队鼓励越界学习与补位，边界是弹性的。"
+    - "对上（资深研究员）：主动要上下文、主动同步、求助时带自己的判断，不甩问题也不硬扛。"
+    - "对内：小团队协作紧密，主动补位而非等分工，把团队目标当自己的目标。"
+    - "成长边界：从『把事做对』走向『独立判断』，这是初级到资深的跃迁点。"
+scenarios:
+  - id: "s1-find-angle"
+    category: "ambiguous-requirements"
+    scenario_title: "你刚加入一个 8 人的 AI 研究小团队，没有明确岗位任务，只有一个大方向，资深同事都在忙自己的实验，你要找到自己的切入点。"
+    junior_approach: "等 leader 安排任务；或者随便挑个看起来有意思的事做，做了两周没人知道有没有价值。"
+    senior_approach: "主动理解大方向，从团队实验记录里找未被覆盖的小问题，跑最小实验验证价值，主动向资深同步发现与判断，用数据赢得信任。"
+    trade_offs: "选择主动切入——代价是可能试错几次才找对方向，但比等待更快建立存在感与判断力。"
+    senior_steps:
+      - move: "主动理解大方向，读团队实验记录，找未被覆盖的小问题。"
+        rationale: "小团队的信息在共享记录里；主动挖掘比等安排快得多，也更早理解全局。"
+      - move: "跑最小实验验证价值，不追求大而全。"
+        rationale: "初级的话语权来自快速跑出的数据；小实验是成本最低的证明。"
+      - move: "主动向资深同步发现与判断，用数据赢得信任。"
+        rationale: "扁平组织里信任来自可见的贡献；同步让贡献被看见、被校准。"
+    trade_off_details:
+      - choose: "主动切入 + 最小实验"
+        over: "等待安排或盲目开干"
+        cost: "可能几次试错才找对方向；换存在感与判断力的快速建立"
+  - id: "s2-solo-explore"
+    category: "uncertainty-exploration"
+    scenario_title: "你要独立验证一个研究想法，但经验不足，方法、工具、评测都不熟，而 deadline 只有一周。"
+    junior_approach: "一个人从头死磕摸索，卡在细节上；或者觉得太难放弃，等别人来做。"
+    senior_approach: "把问题拆小、先跑通最小闭环，卡住时带着自己的尝试主动向有经验的同事请教具体卡点，复用团队现成的工具与数据，不重复造轮子。"
+    trade_offs: "选择拆小 + 求助 + 复用——代价是承认自己不熟、暴露短板，但比死磕更快出结论、更少浪费团队时间。"
+    senior_steps:
+      - move: "把问题拆小，先跑通最小闭环（哪怕用最简方法）。"
+        rationale: "闭环跑通带来全局认知；死磕单点会在细节里迷失方向。"
+      - move: "卡住时带着自己的尝试与判断求助，不甩问题也不硬扛。"
+        rationale: "小团队的高人效靠协作；带判断的求助是高效协作，甩问题或硬扛都是损耗。"
+      - move: "复用团队现成的工具与数据，不重复造轮子。"
+        rationale: "小团队的杠杆靠复用；造轮子既慢又不产生团队价值。"
+    trade_off_details:
+      - choose: "拆小 + 求助 + 复用"
+        over: "死磕或放弃"
+        cost: "暴露短板、需放下面子；换更快出结论与团队时间的节省"
+  - id: "s3-fail-loop"
+    category: "eval-disagreement"
+    scenario_title: "你连续两周实验都没有正向信号，不确定是方向错了还是方法错了，而资深同事的类似实验似乎有进展。"
+    junior_approach: "气馁放弃，觉得自己不适合；或者盲目加大实验量，赌一个方向对。"
+    senior_approach: "区分方向与方法：先复盘方法是否有问题（评测、数据、实现），排除方法后再判断方向；把失败也记录归因，供团队参考。"
+    trade_offs: "选择先排查方法再判方向——代价是多花时间做归因分析，但避免把方法问题误判成方向问题而错杀好方向。"
+    senior_steps:
+      - move: "先复盘方法：评测是否合理、数据是否有问题、实现是否有 bug。"
+        rationale: "初级实验失败九成是方法问题而非方向问题；先排除方法避免误判。"
+      - move: "排除方法后再判断方向，必要时与资深的类似实验对比找差异。"
+        rationale: "对比是最快的校准；差异点往往就是方法或方向的关键。"
+      - move: "把失败也记录归因，供团队参考，负结果同样有价值。"
+        rationale: "小团队的知识复利来自共享记录；你的失败能帮别人少走弯路。"
+    trade_off_details:
+      - choose: "先排查方法再判方向"
+        over: "放弃或盲目加大实验"
+        cost: "多花归因时间；避免错杀好方向与无效投入"
+workflow_and_toolchains:
+  collaboration_interfaces:
+    - "主动同步：进展、发现、判断定期同步给资深，让贡献被看见、被校准。"
+    - "带判断求助：卡住时带自己的尝试与分析求助，不甩问题也不硬扛。"
+    - "共享实验记录：配置、结果、负结论都记，让团队知识复利。"
+    - "主动补位：小团队分工弹性，主动认领团队需要但没人做的事。"
+  agent_and_automation_leverage:
+    - "复用团队工具：优先用现成的评测、实验、数据工具，不重复造轮子。"
+    - "脚本化重复工作：手动重复的动作写成脚本，释放时间做创造。"
+    - "AI 助手加速学习：用 coding/研究 agent 加速上手新领域与新工具。"
+  delivery_loop:
+    trigger: "每个小实验 / 每周学习复盘"
+    loop: ["找未覆盖的小问题", "跑最小闭环验证", "记录结果与归因", "同步并复盘学习", "沉淀工具或方法"]
+    cadence: "实验级（天到周）+ 周学习复盘"
+    evidence: "实验记录（含负结果）、被复用的工具、学习复盘笔记"
+anti_patterns:
+  - name: "等安排"
+    manifestation: "被动等 leader 派任务，不主动理解方向与找事做。"
+    why_it_fails: "小团队没有层级分配任务，等安排等于游离在外，成长停滞、存在感归零。"
+    correction: "主动理解方向、主动找切入点、主动同步进展。"
+  - name: "单点硬啃"
+    manifestation: "一个人死磕不求助，卡在细节上浪费大量时间。"
+    why_it_fails: "小团队高人效靠协作与复用；硬啃既慢又不产生团队价值，还拖慢整体节奏。"
+    correction: "卡住及时带判断求助，复用团队工具，把时间花在创造价值上。"
+  - name: "忽略复用"
+    manifestation: "只做自己的实验，不把工具、数据、方法沉淀给团队。"
+    why_it_fails: "小团队的杠杆靠复用；个人产出不沉淀就无法放大，也无法形成团队知识复利。"
+    correction: "通用的工具与数据主动沉淀，让团队复用，个人价值随复用放大。"
+self_assessment_checks:
+  - id: "sa-decision-mj"
+    dimension: "decision"
+    weight: 0.25
+    question: "大方向下没有明确任务，你要找到自己的切入点。"
+    behavioral_anchor: "理解方向、找未覆盖的小问题、跑最小实验验证价值。"
+    anchors:
+      - { score: 1, behavior: "等 leader 安排任务。" }
+      - { score: 2, behavior: "随便挑个有意思的事瞎做。" }
+      - { score: 3, behavior: "理解方向、找未覆盖的小问题、跑最小实验验证。" }
+      - { score: 4, behavior: "主动同步判断，用数据赢得信任。" }
+      - { score: 5, behavior: "形成主动找切入点的习惯，成为团队的自驱力量。" }
+  - id: "sa-boundary-mj"
+    dimension: "boundary"
+    weight: 0.2
+    question: "遇到超出你当前能力的卡点。"
+    behavioral_anchor: "拆小问题，卡住时带着自己的尝试与判断求助，不甩问题也不硬扛。"
+    anchors:
+      - { score: 1, behavior: "一个人硬啃到底，不求助。" }
+      - { score: 2, behavior: "立刻放弃，等别人做。" }
+      - { score: 3, behavior: "拆小问题，卡住带判断求助，复用工具。" }
+      - { score: 4, behavior: "求助时带着自己的尝试与分析，不甩问题。" }
+      - { score: 5, behavior: "把卡点与解法沉淀，帮后来者少走弯路。" }
+  - id: "sa-leverage-mj"
+    dimension: "leverage"
+    weight: 0.2
+    question: "大量重复性工作消耗你的时间。"
+    behavioral_anchor: "写脚本或复用工具解决重复问题，释放时间做创造。"
+    anchors:
+      - { score: 1, behavior: "手动重复，习以为常。" }
+      - { score: 2, behavior: "抱怨工具缺失但不动手。" }
+      - { score: 3, behavior: "写脚本或复用工具解决重复问题。" }
+      - { score: 4, behavior: "工具沉淀给团队，别人也能用。" }
+      - { score: 5, behavior: "主动发现团队的重复问题并工具化。" }
+  - id: "sa-loop-mj"
+    dimension: "loop"
+    weight: 0.2
+    question: "连续两周实验没有正向信号。"
+    behavioral_anchor: "区分方向与方法，先排除方法问题（评测/数据/实现）再判断方向。"
+    anchors:
+      - { score: 1, behavior: "气馁放弃，觉得自己不适合。" }
+      - { score: 2, behavior: "盲目加大实验量，赌方向对。" }
+      - { score: 3, behavior: "区分方向与方法，先排除方法问题再判方向。" }
+      - { score: 4, behavior: "失败也记录归因，供团队参考。" }
+      - { score: 5, behavior: "从失败中提炼方法论，加速下次判断。" }
+  - id: "sa-antipattern-mj"
+    dimension: "antipattern"
+    weight: 0.15
+    question: "不确定自己该做什么的时候。"
+    behavioral_anchor: "主动理解方向、找事做、同步进展，而非等待被安排。"
+    anchors:
+      - { score: 1, behavior: "等安排，不主动。" }
+      - { score: 2, behavior: "乱做一气，不看方向。" }
+      - { score: 3, behavior: "主动理解方向、找事做、同步进展。" }
+      - { score: 4, behavior: "主动认领团队需要但没人做的事。" }
+      - { score: 5, behavior: "成为团队里『发现并补位』的自驱节点。" }
+---
+
+## 专家按语
+
+AI-Native 执行层与传统执行层的对照，本质是成长路径的差异（见 `alibaba-p6-backend`、`bytedance-2-1-backend`）。P6 在 P7 的评审闸门下成长。2-1 拿上下文交付。两者都有层级与师徒的保护。AI-Native 初级研究员则被直接扔进小团队的深水区。没有师傅、没有明确边界，成长全靠主动闭环。它的暗知识是主动：主动找切入点、主动求助、主动复用、主动补位。
+
+这也解释了 AI-Native 组织的高人效。执行层从第一天就在练独立闭环与判断力。而不是在层级里排队等成长。同一把标尺（tier 5），2-1 在学拿到上下文就交付。MiMo 初级研究员已经在学自己找上下文并下判断。
